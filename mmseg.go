@@ -91,7 +91,7 @@ func NewAyalysis(fileName string) *Analysis {
 			text := string(a[0])
 			freq, e := strconv.Atoi(string(a[1]))
 			if e == nil {
-				wordMap[text] = &Word{text, freq}
+				wordMap[text] = NewWord(text, freq)
 			}
 		}
 	}
