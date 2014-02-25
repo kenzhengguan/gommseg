@@ -1,4 +1,4 @@
-package mmseg
+package gommseg
 
 import "testing"
 
