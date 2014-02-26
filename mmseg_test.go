@@ -88,3 +88,14 @@ func TestAnalysisChunks(t *testing.T) {
 		t.Errorf("expected 2, got %d", len(chunks))
 	}
 }
+
+func TestAnalysisChunksFilter(t *testing.T) {
+	text := "南京市长江大桥欢迎你"
+	chunks := ana.Chunks(text)
+
+	chunk := ana.Filter(chunks)
+	if chunk.Words[0].Text != "南京市" && chunk.Length() != 27 {
+		t.Errorf("filter fail")
+	}
+
+}

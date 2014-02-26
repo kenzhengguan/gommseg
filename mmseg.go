@@ -151,3 +151,63 @@ func (ana *Analysis) Chunks(text string) []*Chunk {
 	}
 	return chunks
 }
+
+func (ana *Analysis) Filter(chunks []*Chunk) *Chunk {
+	var lengthFilterChunks []*Chunk
+	var maxLength int = 0
+	for _, chunk := range chunks {
+		if chunk.Length() > maxLength {
+			lengthFilterChunks = []*Chunk{chunk}
+			maxLength = chunk.Length()
+		} else if chunk.Length() == maxLength {
+			lengthFilterChunks = append(lengthFilterChunks, chunk)
+		}
+	}
+
+	if len(lengthFilterChunks) == 1 {
+		return lengthFilterChunks[0]
+	}
+
+	var averageLengthFilterChunks []*Chunk
+	var maxAverageLength float64 = 0
+	for _, chunk := range lengthFilterChunks {
+		if chunk.AverageLength() > maxAverageLength {
+			averageLengthFilterChunks = []*Chunk{chunk}
+			maxAverageLength = chunk.AverageLength()
+		} else if chunk.AverageLength() == maxAverageLength {
+			averageLengthFilterChunks = append(averageLengthFilterChunks, chunk)
+		}
+	}
+
+	if len(averageLengthFilterChunks) == 1 {
+		return averageLengthFilterChunks[0]
+	}
+
+	var varianceFilterChunks []*Chunk
+	var minVariance float64 = 1.0
+	for _, chunk := range averageLengthFilterChunks {
+		if chunk.Variance() < minVariance {
+			varianceFilterChunks = []*Chunk{chunk}
+			minVariance = chunk.Variance()
+		} else if chunk.Variance() == minVariance {
+			varianceFilterChunks = append(varianceFilterChunks, chunk)
+		}
+	}
+
+	if len(varianceFilterChunks) == 1 {
+		return varianceFilterChunks[0]
+	}
+
+	var freqFilterChunks []*Chunk
+	var maxFreq int = 0
+	for _, chunk := range varianceFilterChunks {
+		if chunk.Freq() > maxFreq {
+			freqFilterChunks = []*Chunk{chunk}
+			maxFreq = chunk.Freq()
+		} else if chunk.Freq() == maxFreq {
+			freqFilterChunks = append(freqFilterChunks, chunk)
+		}
+	}
+
+	return freqFilterChunks[0]
+}
