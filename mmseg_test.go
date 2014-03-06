@@ -97,5 +97,9 @@ func TestAnalysisChunksFilter(t *testing.T) {
 	if chunk.Words[0].Text != "南京市" && chunk.Length() != 27 {
 		t.Errorf("filter fail")
 	}
+}
 
+func TestAnalysisCut(t *testing.T) {
+	text := "我们在野生动物园玩"
+	ana.Cut(text)
 }

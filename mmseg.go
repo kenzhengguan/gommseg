@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"bytes"
 	"fmt"
-	"math"
 	"os"
 	"strconv"
 )
@@ -12,55 +11,6 @@ import (
 const (
 	ChineseCharLength = 3
 )
-
-type Word struct {
-	Text string
-	Freq int
-}
-
-func NewWord(text string, freq int) *Word {
-	return &Word{text, freq}
-}
-
-type Chunk struct {
-	Words []*Word
-}
-
-func NewChunk(words []*Word) *Chunk {
-	return &Chunk{words}
-}
-
-func (c *Chunk) Length() int {
-	var length int
-	for _, word := range c.Words {
-		length += len(word.Text)
-	}
-
-	return length
-}
-
-func (c *Chunk) AverageLength() float64 {
-	return float64(c.Length()) / float64(len(c.Words))
-}
-
-func (c *Chunk) Variance() float64 {
-	var averageLength float64 = c.AverageLength()
-	var sumDistance float64
-	for _, word := range c.Words {
-		sumDistance += math.Pow(float64(len(word.Text))-averageLength, 2.0)
-	}
-
-	return math.Sqrt(sumDistance / float64(len(c.Words)))
-}
-
-func (c *Chunk) Freq() int {
-	var freq int
-	for _, word := range c.Words {
-		freq += word.Freq
-	}
-
-	return freq
-}
 
 type Analysis struct {
 	WordMap map[string]*Word
@@ -106,16 +56,20 @@ func (ana *Analysis) Get(text string) (*Word, bool) {
 
 func (ana *Analysis) MatchWords(text string) []*Word {
 	var (
-		pos        int
-		matchWords []*Word
+		matchWords  []*Word
+		matchString string = ""
 	)
 
-	for pos = ChineseCharLength; pos <= len(text); pos += ChineseCharLength {
-		t := string(text[0:pos])
-		if word, ok := ana.Get(t); ok {
+	for _, char := range text {
+		matchString += string(char)
+		if word, ok := ana.Get(matchString); ok {
 			matchWords = append(matchWords, word)
 		}
 	}
+	if len(matchWords) == 0 {
+		matchWords = append(matchWords, NewWord(string(text[0:ChineseCharLength]), 0))
+	}
+	fmt.Println(matchWords[0])
 
 	return matchWords
 }
@@ -141,13 +95,6 @@ func (ana *Analysis) Chunks(text string) []*Chunk {
 		} else {
 			chunks = append(chunks, NewChunk([]*Word{word1}))
 		}
-	}
-	for idx, chunk := range chunks {
-		fmt.Printf("chunk %d", idx)
-		for _, word := range chunk.Words {
-			fmt.Printf("%s ", word.Text)
-		}
-		fmt.Println("")
 	}
 	return chunks
 }
@@ -184,9 +131,12 @@ func (ana *Analysis) Filter(chunks []*Chunk) *Chunk {
 	}
 
 	var varianceFilterChunks []*Chunk
-	var minVariance float64 = 1.0
-	for _, chunk := range averageLengthFilterChunks {
-		if chunk.Variance() < minVariance {
+	var minVariance float64 = 0.0
+	for idx, chunk := range averageLengthFilterChunks {
+		if idx == 1 {
+			varianceFilterChunks = []*Chunk{chunk}
+			minVariance = chunk.Variance()
+		} else if chunk.Variance() < minVariance {
 			varianceFilterChunks = []*Chunk{chunk}
 			minVariance = chunk.Variance()
 		} else if chunk.Variance() == minVariance {
@@ -208,6 +158,27 @@ func (ana *Analysis) Filter(chunks []*Chunk) *Chunk {
 			freqFilterChunks = append(freqFilterChunks, chunk)
 		}
 	}
-
 	return freqFilterChunks[0]
+}
+
+func (ana *Analysis) firstWord(text string) string {
+	chunks := ana.Chunks(text)
+	chunk := ana.Filter(chunks)
+	return chunk.Words[0].Text
+}
+
+func (ana *Analysis) Cut(text string) []string {
+	var (
+		pos        int = 0
+		textLength int = len(text)
+		result     []string
+	)
+
+	for pos < textLength {
+		str := string([]byte(text)[pos:textLength])
+		word := ana.firstWord(str)
+		result = append(result, word)
+		pos += len(word)
+	}
+	return result
 }
