@@ -5,6 +5,8 @@ import (
 	"bytes"
 	"fmt"
 	"os"
+	"path"
+	"runtime"
 	"strconv"
 )
 
@@ -15,7 +17,9 @@ const (
 var Ana *Analysis
 
 func init() {
-	Ana = NewAyalysis("./d/data.txt")
+	_, fileName, _, _ := runtime.Caller(1)
+	dataPath := path.Join(path.Dir(fileName), "d/data.txt")
+	Ana = NewAyalysis(dataPath)
 }
 
 type Analysis struct {
