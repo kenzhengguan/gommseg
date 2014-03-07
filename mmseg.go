@@ -12,6 +12,12 @@ const (
 	ChineseCharLength = 3
 )
 
+var Ana *Analysis
+
+func init() {
+	Ana = NewAyalysis("./d/data.txt")
+}
+
 type Analysis struct {
 	WordMap map[string]*Word
 }
