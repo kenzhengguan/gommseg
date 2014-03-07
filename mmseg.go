@@ -18,7 +18,7 @@ var Ana *Analysis
 func init() {
 	_, fileName, _, _ := runtime.Caller(1)
 	dataPath := path.Join(path.Dir(fileName), "d/data.txt")
-	Ana = NewAyalysis(dataPath)
+	Ana = NewAnalysis(dataPath)
 }
 
 type Analysis struct {
@@ -26,7 +26,7 @@ type Analysis struct {
 }
 
 // "/Users/raquelken/Desktop/mini.txt"
-func NewAyalysis(fileName string) *Analysis {
+func NewAnalysis(fileName string) *Analysis {
 	file, err := os.Open(fileName)
 	if err != nil {
 		panic(err)
