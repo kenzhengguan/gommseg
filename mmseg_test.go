@@ -101,3 +101,10 @@ func TestAnalysisCut(t *testing.T) {
 	text := "我们在野生动物园玩"
 	Ana.Cut(text)
 }
+
+func BenchmarkAnalysis(b *testing.B) {
+	text := "南京市长江大桥欢迎你"
+	for n := 0; n < b.N; n++ {
+		Ana.Cut(text)
+	}
+}
