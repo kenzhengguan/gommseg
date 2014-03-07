@@ -3,7 +3,6 @@ package gommseg
 import (
 	"bufio"
 	"bytes"
-	"fmt"
 	"os"
 	"path"
 	"runtime"
@@ -79,7 +78,6 @@ func (ana *Analysis) MatchWords(text string) []*Word {
 	if len(matchWords) == 0 {
 		matchWords = append(matchWords, NewWord(string(text[0:ChineseCharLength]), 0))
 	}
-	fmt.Println(matchWords[0])
 
 	return matchWords
 }
