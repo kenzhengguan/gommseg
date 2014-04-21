@@ -13,20 +13,20 @@ const (
 	ChineseCharLength = 3
 )
 
-var Ana *Analysis
+var Ana *Segment
 
 func init() {
 	_, fileName, _, _ := runtime.Caller(1)
 	dataPath := path.Join(path.Dir(fileName), "d/data.txt")
-	Ana = NewAnalysis(dataPath)
+	Ana = NewSegment(dataPath)
 }
 
-type Analysis struct {
+type Segment struct {
 	WordMap map[string]*Word
 }
 
 // "/Users/raquelken/Desktop/mini.txt"
-func NewAnalysis(fileName string) *Analysis {
+func NewSegment(fileName string) *Segment {
 	file, err := os.Open(fileName)
 	if err != nil {
 		panic(err)
@@ -55,15 +55,15 @@ func NewAnalysis(fileName string) *Analysis {
 		}
 	}
 
-	return &Analysis{wordMap}
+	return &Segment{wordMap}
 }
 
-func (ana *Analysis) Get(text string) (*Word, bool) {
+func (ana *Segment) Get(text string) (*Word, bool) {
 	word, ok := ana.WordMap[text]
 	return word, ok
 }
 
-func (ana *Analysis) MatchWords(text string) []*Word {
+func (ana *Segment) MatchWords(text string) []*Word {
 	var (
 		matchWords  []*Word
 		matchString string = ""
@@ -82,7 +82,7 @@ func (ana *Analysis) MatchWords(text string) []*Word {
 	return matchWords
 }
 
-func (ana *Analysis) Chunks(text string) []*Chunk {
+func (ana *Segment) Chunks(text string) []*Chunk {
 	var chunks []*Chunk
 	for _, word1 := range ana.MatchWords(text) {
 		textLength := len(text)
@@ -107,7 +107,7 @@ func (ana *Analysis) Chunks(text string) []*Chunk {
 	return chunks
 }
 
-func (ana *Analysis) Filter(chunks []*Chunk) *Chunk {
+func (ana *Segment) Filter(chunks []*Chunk) *Chunk {
 	var lengthFilterChunks []*Chunk
 	var maxLength int = 0
 	for _, chunk := range chunks {
@@ -169,13 +169,13 @@ func (ana *Analysis) Filter(chunks []*Chunk) *Chunk {
 	return freqFilterChunks[0]
 }
 
-func (ana *Analysis) firstWord(text string) string {
+func (ana *Segment) firstWord(text string) string {
 	chunks := ana.Chunks(text)
 	chunk := ana.Filter(chunks)
 	return chunk.Words[0].Text
 }
 
-func (ana *Analysis) Cut(text string) []string {
+func (ana *Segment) Cut(text string) []string {
 	var (
 		pos        int = 0
 		textLength int = len(text)

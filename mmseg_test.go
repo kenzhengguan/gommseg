@@ -2,7 +2,7 @@ package gommseg
 
 import "testing"
 
-func TestAnalysisGetWord(t *testing.T) {
+func TestSegmentGetWord(t *testing.T) {
 	text := "你好"
 	_, ok := Ana.Get(text)
 
@@ -11,7 +11,7 @@ func TestAnalysisGetWord(t *testing.T) {
 	}
 }
 
-func TestAnalysisWord(t *testing.T) {
+func TestSegmentWord(t *testing.T) {
 	text := "你好"
 	word, _ := Ana.Get(text)
 
@@ -24,7 +24,7 @@ func TestAnalysisWord(t *testing.T) {
 	}
 }
 
-func TestAnalysisMatchWordsLength(t *testing.T) {
+func TestSegmentMatchWordsLength(t *testing.T) {
 	text := "学术危机"
 	// text := []byte("你好吗")
 
@@ -34,7 +34,7 @@ func TestAnalysisMatchWordsLength(t *testing.T) {
 	}
 }
 
-func TestAnalysisMatchWords(t *testing.T) {
+func TestSegmentMatchWords(t *testing.T) {
 	text := "南京市长江大桥欢迎你"
 
 	words := Ana.MatchWords(text)
@@ -43,7 +43,7 @@ func TestAnalysisMatchWords(t *testing.T) {
 	}
 }
 
-func TestAnalysisChunks(t *testing.T) {
+func TestSegmentChunks(t *testing.T) {
 	text := "南京市长江大桥欢迎你"
 	chunks := Ana.Chunks(text)
 
@@ -52,7 +52,7 @@ func TestAnalysisChunks(t *testing.T) {
 	}
 }
 
-func TestAnalysisChunksFilter(t *testing.T) {
+func TestSegmentChunksFilter(t *testing.T) {
 	text := "南京市长江大桥欢迎你"
 	chunks := Ana.Chunks(text)
 
@@ -62,12 +62,12 @@ func TestAnalysisChunksFilter(t *testing.T) {
 	}
 }
 
-func TestAnalysisCut(t *testing.T) {
+func TestSegmentCut(t *testing.T) {
 	text := "我们在野生动物园玩"
 	Ana.Cut(text)
 }
 
-func BenchmarkAnalysis(b *testing.B) {
+func BenchmarkSegment(b *testing.B) {
 	text := "南京市长江大桥欢迎你"
 	for n := 0; n < b.N; n++ {
 		Ana.Cut(text)
