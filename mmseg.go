@@ -9,9 +9,9 @@ import (
 	"strconv"
 )
 
-const (
-	ChineseCharLength = 3
-)
+// const (
+// 	ChineseCharLength = 3
+// )
 
 var Ana *Segment
 
@@ -67,16 +67,24 @@ func (ana *Segment) MatchWords(text string) []*Word {
 	var (
 		matchWords  []*Word
 		matchString string = ""
+		firstChar   string
+		isFirstChar bool = false
 	)
 
 	for _, char := range text {
 		matchString += string(char)
+		if !isFirstChar {
+			firstChar = matchString
+			isFirstChar = false
+		}
+
 		if word, ok := ana.Get(matchString); ok {
 			matchWords = append(matchWords, word)
 		}
 	}
 	if len(matchWords) == 0 {
-		matchWords = append(matchWords, NewWord(string(text[0:ChineseCharLength]), 0))
+		// matchWords = append(matchWords, NewWord(string(text[0:ChineseCharLength]), 0))
+		matchWords = append(matchWords, NewWord(firstChar, 0))
 	}
 
 	return matchWords

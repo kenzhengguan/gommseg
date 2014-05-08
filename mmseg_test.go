@@ -25,7 +25,7 @@ func TestSegmentWord(t *testing.T) {
 }
 
 func TestSegmentMatchWordsLength(t *testing.T) {
-	text := "学术危机"
+	text := "希望找到一个能发挥你能力的地方?"
 	// text := []byte("你好吗")
 
 	words := Ana.MatchWords(text)
@@ -35,10 +35,10 @@ func TestSegmentMatchWordsLength(t *testing.T) {
 }
 
 func TestSegmentMatchWords(t *testing.T) {
-	text := "南京市长江大桥欢迎你"
+	text := "希望找到一个能发挥你能力的地方?"
 
 	words := Ana.MatchWords(text)
-	if words[0].Text != "南" {
+	if words[0].Text != "希" {
 		t.Errorf("match word error")
 	}
 }
