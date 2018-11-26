@@ -3,11 +3,11 @@ gommseg
 
 mmseg in go
 
-##Install
+## Install
 
 $ go get github.com/raquelken/gommseg
 
-##Getting Started
+## Getting Started
 ```go
 package main
 
